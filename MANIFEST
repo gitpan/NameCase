@@ -1,5 +1,5 @@
 NameCase.pm
-NameCase.t
+t/NameCase.t
 MANIFEST
 Makefile.PL
 README

@@ -1,6 +1,6 @@
 package Text::NameCase ;    # Documented at the __END__.
 
-# $Id: NameCase.pm,v 1.8 1999/05/08 12:36:39 root Exp root $
+# $Id: NameCase.pm,v 1.10 1999/07/29 19:06:19 root Exp $
 
 require 5.004 ;
 
@@ -10,7 +10,7 @@ use Carp ;
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK ) ;
 
-$VERSION = '1.04' ;
+$VERSION = '1.06' ;
 
 
 use Exporter() ;
@@ -63,7 +63,6 @@ sub nc {
         if scalar @_ > 1 or ( ref $_[0] and ref $_[0] ne 'SCALAR' ) ;
         
     local( $_ ) = @_ if @_ ;
-
     $_ = ${$_} if ref( $_ ) ;           # Replace reference with value.
 
     $_ = lc ;                           # Lowercase the lot.
@@ -125,9 +124,6 @@ NameCase - Perl module to fix the case of people's names.
 
     $FixedCasedName  = nc( \$OriginalName ) ;
 
-    $FixedCasedName  = nc ; # Uses and sets $_ if no argument supplied.
-
-    nc ; # Sets $_ if no argument assigned.
 
     # Working with arrays or array references.
 
@@ -211,10 +207,13 @@ Use Kim Ryan's NameParse.pm for any really sophisticated name parsing.
             e.g. "$ans = nc ;" and "nc ;", both of which set $_, with the
             first one setting $ans also.
 
+1999/07/30  Modified for CPAN and automatic testing. Stopped using $_ as the
+            default argument.
+
 
 =head1 AUTHOR
 
-Mark Summerfield. I can be contacted as <mark.summerfield@chest.ac.uk> -
+Mark Summerfield. I can be contacted as <summer@chest.ac.uk> -
 please include the word 'namecase' in the subject line.
 
 Thanks to Kim Ryan <kimaryan@ozemail.com.au> for his Mc/Mac solution.

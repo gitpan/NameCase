@@ -10,7 +10,7 @@ WriteMakefile(
     ($] >= 5.005 ?
         (
             ABSTRACT => 'Change UCASE and lowcase names to Proper Case',
-            AUTHOR   => 'Mark Summerfield <mark.summerfield@chest.ac.uk>',
+            AUTHOR   => 'Mark Summerfield <summer@chest.ac.uk>',
         ) : () ),
     'LIBS'         => [''],   # e.g., '-lm'
     'DEFINE'       => '',     # e.g., '-DHAVE_SOMETHING'
