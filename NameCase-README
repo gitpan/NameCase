@@ -1,0 +1,101 @@
+NAME
+
+NameCase - Perl module to fix the case of people's names.
+
+SYNOPSIS
+
+    use Text::NameCase 'NameCase' ;
+
+    $FixedCasedName  = NameCase( $OriginalName ) ;
+    @FixedCasedNames = NameCase( @OriginalNames ) ;
+
+    $FixedCasedName  = NameCase( \$OriginalName ) ;
+    @FixedCasedNames = NameCase( \@OriginalNames ) ;
+
+    NameCase( \@OriginalNames ) ; # In-place.
+
+    # NameCase will not change a scalar in-place, i.e.
+    NameCase( \$OriginalName ) ; # WRONG: null operation.
+
+    # "Faster" version for working with scalars only; complementing lc and uc.
+
+    use Text::NameCase qw( nc ) ;
+
+    $FixedCasedName  = nc( $OriginalName ) ;
+
+    $FixedCasedName  = nc( \$OriginalName ) ;
+
+DESCRIPTION
+
+Forenames and surnames are often stored either wholly in UPPERCASE
+or wholly in lowercase. This module allows you to convert names into
+the correct case where possible.
+
+Although forenames and surnames are normally stored separately if they
+do appear in a single string, space separated, NameCase and nc deal
+correctly with them.
+
+NameCase currently correctly name cases names which include any of the
+following:
+    Mc, el, ap, da, de, di, du, del, der, la, le, van and von.
+
+It correctly deals with names which contain apostrophies and hyphens too.
+
+EXAMPLE FIXES
+
+    Original            Name Case
+    --------            ---------
+    KEITH               Keith
+    LEIGH-WILLIAMS      Leigh-Williams
+    MCCARTHY            McCarthy
+    O'CALLAGHAN         O'Callaghan
+    ST. JOHN            St. John
+
+plus "son (daughter) of" etc. in various languages, e.g.:
+
+    VON STREIT          von Streit
+    VAN DYKE            van Dyke
+    AP LLWYD DAFYDD     ap Llwyd Dafydd
+etc.
+
+BUGS
+
+The module covers the rules that I know of. There are probably a lot
+more rules, exceptions etc. for "Western"-style languages which could be
+incorporated.
+
+We don't fix names that begin with "Mac" because we can't distinguish
+between MacDonald and Macadema... unless we used a list of literal
+names to check for?
+
+We don't fix "ben" - for hebrew names this means son of, but it can
+mean "Ben" as a name in itself or as a form of "Benjamin". Similarly we
+don't fix "al" - for arabic names this means son of, but it can also
+mean "Al" as a name in itself.
+
+There are probably lots of exceptions and problems - but as a general
+data 'cleaner' it may be all you need.
+
+CHANGES
+
+1998/4/20   First release.
+
+1998/6/25   First public release.
+
+1999/01/18  Second public release.
+
+AUTHOR
+
+Mark Summerfield. I can be contacted as <mark.summerfield@chest.ac.uk> -
+please include the word 'namecase' in the subject line.
+
+COPYRIGHT
+
+Copyright (c) Mark Summerfield 1998/9. All Rights Reserved.
+
+This module may be used/distributed/modified under the same terms as Perl
+itself.
+
+
+
+
