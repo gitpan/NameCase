@@ -22,15 +22,16 @@ my $debugging = 0 ;
 # Set up data for the tests.
 my @proper_names = (
     "Keith",            "Leigh-Williams",       "McCarthy",
-	"O'Callaghan",      "St. John",             "von Streit",
-	"van Dyke",         "ap Llwyd Dafydd",      
+    "O'Callaghan",      "St. John",             "von Streit",
+    "van Dyke",         "ap Llwyd Dafydd",      
     #"al Fayd", -- could be Al as in Gore
     "el Grecco",        #"ben Gurion", # Can't use -- could be Ben as in Benjamin.
     "da Vinci",
     "di Caprio",        "du Pont",              "de Legate",
     "del Crond",        "der Sind",             "van der Post",
     "von Trapp",        "la Poisson",           "le Figaro",
-	) ;
+    "Mack Knife",       "Dougal MacDonald",
+    ) ;
 
 # Set up some module globals.
 my @uppercase_names = map { uc } @proper_names ;

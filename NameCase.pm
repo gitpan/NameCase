@@ -1,6 +1,6 @@
 package Text::NameCase ;    # Documented at the __END__.
 
-# $Id: NameCase.pm,v 1.2 1999/01/20 22:09:31 root Exp root $
+# $Id: NameCase.pm,v 1.5 1999/03/09 20:16:52 root Exp root $
 
 require 5.004 ;
 
@@ -10,7 +10,7 @@ use Carp ;
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK ) ;
 
-$VERSION = '1.00' ;
+$VERSION = '1.02' ;
 
 
 use Exporter() ;
@@ -72,6 +72,7 @@ sub nc {
 
     # Fixes for "son (daughter) of" etc. in various languages.
     s{ \b Mc(\w)       }{Mc\u$1}gox ;   # Mc? Irish/Celtic.
+    s{ \b Mac([^\Wk])  }{Mac\u$1}gox ;  # Mac? Irish/Celtic excl. Mack.
     s{ \b (E)l      \b }{\l$1l}gox ;    # el Arabic/Greek.
     s{ \b Ap        \b }{ap}gox ;       # ap Welsh.
     s{ \b D([aeiu]) \b }{d$1}gox ;      # da, de, di Italian; du French.
@@ -126,7 +127,7 @@ correctly with them.
 
 NameCase currently correctly name cases names which include any of the
 following:
-    Mc, el, ap, da, de, di, du, del, der, la, le, van and von.
+    Mc, Mac, el, ap, da, de, di, du, del, der, la, le, van and von.
 
 It correctly deals with names which contain apostrophies and hyphens too.
 
@@ -153,10 +154,6 @@ The module covers the rules that I know of. There are probably a lot
 more rules, exceptions etc. for "Western"-style languages which could be
 incorporated.
 
-We don't fix names that begin with "Mac" because we can't distinguish
-between MacDonald and Macadema... unless we used a list of literal
-names to check for?
-
 We don't fix "ben" - for hebrew names this means son of, but it can
 mean "Ben" as a name in itself or as a form of "Benjamin". Similarly we
 don't fix "al" - for arabic names this means son of, but it can also
@@ -172,6 +169,8 @@ data 'cleaner' it may be all you need.
 1998/6/25   First public release.
 
 1999/01/18  Second public release.
+
+1999/02/08  Added Mac with Mack as an exception, thanks to Kim Ryan for this.
 
 =head1 AUTHOR
 

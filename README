@@ -1,8 +1,9 @@
-NAME
+
+=head1 NAME
 
 NameCase - Perl module to fix the case of people's names.
 
-SYNOPSIS
+=head1 SYNOPSIS
 
     use Text::NameCase 'NameCase' ;
 
@@ -25,7 +26,7 @@ SYNOPSIS
 
     $FixedCasedName  = nc( \$OriginalName ) ;
 
-DESCRIPTION
+=head1 DESCRIPTION
 
 Forenames and surnames are often stored either wholly in UPPERCASE
 or wholly in lowercase. This module allows you to convert names into
@@ -37,11 +38,11 @@ correctly with them.
 
 NameCase currently correctly name cases names which include any of the
 following:
-    Mc, el, ap, da, de, di, du, del, der, la, le, van and von.
+    Mc, Mac, el, ap, da, de, di, du, del, der, la, le, van and von.
 
 It correctly deals with names which contain apostrophies and hyphens too.
 
-EXAMPLE FIXES
+=head2 EXAMPLE FIXES
 
     Original            Name Case
     --------            ---------
@@ -58,15 +59,11 @@ plus "son (daughter) of" etc. in various languages, e.g.:
     AP LLWYD DAFYDD     ap Llwyd Dafydd
 etc.
 
-BUGS
+=head1 BUGS
 
 The module covers the rules that I know of. There are probably a lot
 more rules, exceptions etc. for "Western"-style languages which could be
 incorporated.
-
-We don't fix names that begin with "Mac" because we can't distinguish
-between MacDonald and Macadema... unless we used a list of literal
-names to check for?
 
 We don't fix "ben" - for hebrew names this means son of, but it can
 mean "Ben" as a name in itself or as a form of "Benjamin". Similarly we
@@ -76,7 +73,7 @@ mean "Al" as a name in itself.
 There are probably lots of exceptions and problems - but as a general
 data 'cleaner' it may be all you need.
 
-CHANGES
+=head1 CHANGES
 
 1998/4/20   First release.
 
@@ -84,18 +81,20 @@ CHANGES
 
 1999/01/18  Second public release.
 
-AUTHOR
+1999/02/08  Added Mac with Mack as an exception, thanks to Kim Ryan for this.
+
+=head1 AUTHOR
 
 Mark Summerfield. I can be contacted as <mark.summerfield@chest.ac.uk> -
 please include the word 'namecase' in the subject line.
 
-COPYRIGHT
+=head1 COPYRIGHT
 
 Copyright (c) Mark Summerfield 1998/9. All Rights Reserved.
 
 This module may be used/distributed/modified under the same terms as Perl
 itself.
 
-
+=cut
 
 
