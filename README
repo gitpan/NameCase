@@ -1,9 +1,22 @@
-
 =head1 NAME
 
 NameCase - Perl module to fix the case of people's names.
 
 =head1 SYNOPSIS
+
+    # Working with scalars; complementing lc and uc.
+
+    use Text::NameCase qw( nc ) ;
+
+    $FixedCasedName  = nc( $OriginalName ) ;
+
+    $FixedCasedName  = nc( \$OriginalName ) ;
+
+    $FixedCasedName  = nc ; # Uses and sets $_ if no argument supplied.
+
+    nc ; # Sets $_ if no argument assigned.
+
+    # Working with arrays or array references.
 
     use Text::NameCase 'NameCase' ;
 
@@ -18,14 +31,6 @@ NameCase - Perl module to fix the case of people's names.
     # NameCase will not change a scalar in-place, i.e.
     NameCase( \$OriginalName ) ; # WRONG: null operation.
 
-    # "Faster" version for working with scalars only; complementing lc and uc.
-
-    use Text::NameCase qw( nc ) ;
-
-    $FixedCasedName  = nc( $OriginalName ) ;
-
-    $FixedCasedName  = nc( \$OriginalName ) ;
-
 =head1 DESCRIPTION
 
 Forenames and surnames are often stored either wholly in UPPERCASE
@@ -33,12 +38,13 @@ or wholly in lowercase. This module allows you to convert names into
 the correct case where possible.
 
 Although forenames and surnames are normally stored separately if they
-do appear in a single string, space separated, NameCase and nc deal
+do appear in a single string, whitespace separated, NameCase and nc deal
 correctly with them.
 
 NameCase currently correctly name cases names which include any of the
 following:
-    Mc, Mac, el, ap, da, de, di, du, del, der, la, le, van and von.
+    Mc, Mac, al, el, ap, da, de, delle, della, di, du, del, der, 
+    la, le, lo, van and von.
 
 It correctly deals with names which contain apostrophies and hyphens too.
 
@@ -66,12 +72,14 @@ more rules, exceptions etc. for "Western"-style languages which could be
 incorporated.
 
 We don't fix "ben" - for hebrew names this means son of, but it can
-mean "Ben" as a name in itself or as a form of "Benjamin". Similarly we
-don't fix "al" - for arabic names this means son of, but it can also
+mean "Ben" as a name in itself or as a form of "Benjamin". However we
+do fix "al" - for arabic names this means son of, even though it can also
 mean "Al" as a name in itself.
 
 There are probably lots of exceptions and problems - but as a general
 data 'cleaner' it may be all you need.
+
+Use Kim Ryan's NameParse.pm for any really sophisticated name parsing.
 
 =head1 CHANGES
 
@@ -83,10 +91,20 @@ data 'cleaner' it may be all you need.
 
 1999/02/08  Added Mac with Mack as an exception, thanks to Kim Ryan for this.
 
+1999/05/05  Copied Kim Ryan's Mc/Mac solution from his NameParse.pm and 
+            replaced my Mc/Mac solution with his.
+
+1999/05/08  nc can now use $_ as its default argument 
+            e.g. "$ans = nc ;" and "nc ;", both of which set $_, with the
+            first one setting $ans also.
+
+
 =head1 AUTHOR
 
 Mark Summerfield. I can be contacted as <mark.summerfield@chest.ac.uk> -
 please include the word 'namecase' in the subject line.
+
+Thanks to Kim Ryan <kimaryan@ozemail.com.au> for his Mc/Mac solution.
 
 =head1 COPYRIGHT
 

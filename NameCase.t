@@ -24,14 +24,20 @@ my @proper_names = (
     "Keith",            "Leigh-Williams",       "McCarthy",
     "O'Callaghan",      "St. John",             "von Streit",
     "van Dyke",         "ap Llwyd Dafydd",      
-    #"al Fayd", -- could be Al as in Gore
+    "al Fayd", 
     "el Grecco",        #"ben Gurion", # Can't use -- could be Ben as in Benjamin.
     "da Vinci",
     "di Caprio",        "du Pont",              "de Legate",
     "del Crond",        "der Sind",             "van der Post",
     "von Trapp",        "la Poisson",           "le Figaro",
     "Mack Knife",       "Dougal MacDonald",
-    ) ;
+    # Mac exceptions
+    "Machin",           "Machlin",              "Machar",
+    "Mackle",           "Macklin",              "Mackie",
+    "Macquarie",        "Machado",              "Macevicius",
+    "Maciulis",         "Macias",               "MacMurdo",
+ 
+) ;
 
 # Set up some module globals.
 my @uppercase_names = map { uc } @proper_names ;
@@ -143,6 +149,18 @@ print "Reference to a scalar in a list context using NameCase..." ;
 print ( $name eq $uppercase_names[1] ? "OK" : "Failed\a" ) ;
 print ". Fixed..." ;
 print ( $result[0] eq $proper_names[1] ? "OK\n" : "Failed\a\n" ) ;
+
+# Test $_.
+$_ = $uppercase_names[1] ;
+nc ;
+print "nc with no args, i.e. using \$_ in-place..." ;
+print ( $_ eq $proper_names[1] ? "OK\n" : "Failed\a\n" ) ;
+
+# Test $_.
+$_ = $uppercase_names[1] ;
+$fixed_name = nc ;
+print "nc with no args, i.e. using \$_ assigning..." ;
+print ( $fixed_name eq $proper_names[1] ? "OK\n" : "Failed\a\n" ) ;
 
 
 sub eq_array {

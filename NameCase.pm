@@ -1,6 +1,6 @@
 package Text::NameCase ;    # Documented at the __END__.
 
-# $Id: NameCase.pm,v 1.5 1999/03/09 20:16:52 root Exp root $
+# $Id: NameCase.pm,v 1.8 1999/05/08 12:36:39 root Exp root $
 
 require 5.004 ;
 
@@ -10,7 +10,7 @@ use Carp ;
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK ) ;
 
-$VERSION = '1.02' ;
+$VERSION = '1.04' ;
 
 
 use Exporter() ;
@@ -59,25 +59,47 @@ sub NameCase {
 #############################
 sub nc {
 
-    croak "Usage: nc [\\]\$SCALAR"
-        if scalar @_ != 1 or ( ref $_[0] and ref $_[0] ne 'SCALAR' ) ;
+    croak "Usage: nc [[\\]\$SCALAR]"
+        if scalar @_ > 1 or ( ref $_[0] and ref $_[0] ne 'SCALAR' ) ;
         
-    local( $_ ) = @_ ;
+    local( $_ ) = @_ if @_ ;
 
     $_ = ${$_} if ref( $_ ) ;           # Replace reference with value.
 
     $_ = lc ;                           # Lowercase the lot.
-	s{ \b (\w) }{\u$1}gox ;             # Uppercase first letter of every word.
+	s{ \b (\w)   }{\u$1}gox ;           # Uppercase first letter of every word.
     s{ (\'\w) \b }{\L$1}gox ;           # Lowercase 's.
 
+    # Name case Mcs and Macs - taken straight from NameParse.pm incl. comments.
+    # Exclude names with 1-2 letters after prefix like Mack, Macky, Mace
+    # Exclude names ending in a,c,i,o, or j are typically Polish or Italian
+
+    if ( /\bMac[A-Za-z]{2,}[^aciozj]\b/o or /\bMc/o ) {
+        s/\b(Ma?c)([A-Za-z]+)/$1\u$2/go ;
+
+        # Now correct for "Mac" exceptions
+        s/\bMacHin/Machin/go ;
+        s/\bMacHlin/Machlin/go ;
+        s/\bMacHar/Machar/go ;
+        s/\bMacKle/Mackle/go ;
+        s/\bMacKlin/Macklin/go ;
+        s/\bMacKie/Mackie/go ;
+        s/\bMacQuarie/Macquarie/go ;
+        s/\bMacHado/Machado/go ;        # Portuguese
+        s/\bMacEvicius/Macevicius/go ;  # Lithuanian
+        s/\bMacIulis/Maciulis/go ;  
+        s/\bMacIas/Macias/go ;  
+
+    }
+    s/Macmurdo/MacMurdo/go ;
+ 
     # Fixes for "son (daughter) of" etc. in various languages.
-    s{ \b Mc(\w)       }{Mc\u$1}gox ;   # Mc? Irish/Celtic.
-    s{ \b Mac([^\Wk])  }{Mac\u$1}gox ;  # Mac? Irish/Celtic excl. Mack.
-    s{ \b (E)l      \b }{\l$1l}gox ;    # el Arabic/Greek.
+    s{ \b ([AE])l   \b }{\l$1l}gox ;    # al and el Arabic/Greek.
     s{ \b Ap        \b }{ap}gox ;       # ap Welsh.
+    s{ \b Dell([ae])\b }{dell$1}gox ;   # della delle Italian.
     s{ \b D([aeiu]) \b }{d$1}gox ;      # da, de, di Italian; du French.
     s{ \b De([lr])  \b }{de$1}gox ;     # del Italian; der Dutch/Flemish.
-    s{ \b L([ae])   \b }{l$1}gox ;      # la, le French.
+    s{ \b L([aeo])  \b }{l$1}gox ;      # lo Italian; la, le French.
     s{ \b V([ao])n  \b }{v$1n}gox ;     # van German; von Dutch/Flemish.
 
     $_ ;
@@ -88,11 +110,26 @@ sub nc {
 
 __END__
 
+
 =head1 NAME
 
 NameCase - Perl module to fix the case of people's names.
 
 =head1 SYNOPSIS
+
+    # Working with scalars; complementing lc and uc.
+
+    use Text::NameCase qw( nc ) ;
+
+    $FixedCasedName  = nc( $OriginalName ) ;
+
+    $FixedCasedName  = nc( \$OriginalName ) ;
+
+    $FixedCasedName  = nc ; # Uses and sets $_ if no argument supplied.
+
+    nc ; # Sets $_ if no argument assigned.
+
+    # Working with arrays or array references.
 
     use Text::NameCase 'NameCase' ;
 
@@ -107,14 +144,6 @@ NameCase - Perl module to fix the case of people's names.
     # NameCase will not change a scalar in-place, i.e.
     NameCase( \$OriginalName ) ; # WRONG: null operation.
 
-    # "Faster" version for working with scalars only; complementing lc and uc.
-
-    use Text::NameCase qw( nc ) ;
-
-    $FixedCasedName  = nc( $OriginalName ) ;
-
-    $FixedCasedName  = nc( \$OriginalName ) ;
-
 =head1 DESCRIPTION
 
 Forenames and surnames are often stored either wholly in UPPERCASE
@@ -122,12 +151,13 @@ or wholly in lowercase. This module allows you to convert names into
 the correct case where possible.
 
 Although forenames and surnames are normally stored separately if they
-do appear in a single string, space separated, NameCase and nc deal
+do appear in a single string, whitespace separated, NameCase and nc deal
 correctly with them.
 
 NameCase currently correctly name cases names which include any of the
 following:
-    Mc, Mac, el, ap, da, de, di, du, del, der, la, le, van and von.
+    Mc, Mac, al, el, ap, da, de, delle, della, di, du, del, der, 
+    la, le, lo, van and von.
 
 It correctly deals with names which contain apostrophies and hyphens too.
 
@@ -155,12 +185,14 @@ more rules, exceptions etc. for "Western"-style languages which could be
 incorporated.
 
 We don't fix "ben" - for hebrew names this means son of, but it can
-mean "Ben" as a name in itself or as a form of "Benjamin". Similarly we
-don't fix "al" - for arabic names this means son of, but it can also
+mean "Ben" as a name in itself or as a form of "Benjamin". However we
+do fix "al" - for arabic names this means son of, even though it can also
 mean "Al" as a name in itself.
 
 There are probably lots of exceptions and problems - but as a general
 data 'cleaner' it may be all you need.
+
+Use Kim Ryan's NameParse.pm for any really sophisticated name parsing.
 
 =head1 CHANGES
 
@@ -172,10 +204,20 @@ data 'cleaner' it may be all you need.
 
 1999/02/08  Added Mac with Mack as an exception, thanks to Kim Ryan for this.
 
+1999/05/05  Copied Kim Ryan's Mc/Mac solution from his NameParse.pm and 
+            replaced my Mc/Mac solution with his.
+
+1999/05/08  nc can now use $_ as its default argument 
+            e.g. "$ans = nc ;" and "nc ;", both of which set $_, with the
+            first one setting $ans also.
+
+
 =head1 AUTHOR
 
 Mark Summerfield. I can be contacted as <mark.summerfield@chest.ac.uk> -
 please include the word 'namecase' in the subject line.
+
+Thanks to Kim Ryan <kimaryan@ozemail.com.au> for his Mc/Mac solution.
 
 =head1 COPYRIGHT
 
